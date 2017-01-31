@@ -10,14 +10,17 @@ public class Callback {
     public static final String QUERY_STATIC = "query_static";
     public static final String QUERY_DYNAMIC = "query_dynamic";
 
-    private String type, source, target, receiver, receiverPkg;
+    private String type, source, target, receiverPkg;
+    private IEdgeAnalyticsCallback callback;
 
-    public Callback(String type, String source, String target, String receiver, String receiverPkg) {
+    public Callback(String type, String source, String target,  String receiverPkg,
+                    IEdgeAnalyticsCallback callback) {
         this.type = type;
         this.source = source;
         this.target = target;
-        this.receiver = receiver;
+        //this.receiver = receiver;
         this.receiverPkg = receiverPkg;
+        this.callback = callback;
     }
 
     public String getType() {
@@ -32,16 +35,16 @@ public class Callback {
         return target;
     }
 
-    public String getReceiver() {
-        return receiver;
-    }
-
     public String getReceiverPkg() {
         return receiverPkg;
     }
 
+    public IEdgeAnalyticsCallback getCallback() {
+        return callback;
+    }
+
     @Override
     public String toString() {
-        return type + " : " + source + ", " + target +", "+ receiver;
+        return type + " : " + source + ", " + target ;
     }
 }

@@ -16,5 +16,5 @@
 package org.wso2.edgeanalyticsservice;
 
 interface IEdgeAnalyticsCallback {
-    void callback(String event);
+   void callback(String event);
 }

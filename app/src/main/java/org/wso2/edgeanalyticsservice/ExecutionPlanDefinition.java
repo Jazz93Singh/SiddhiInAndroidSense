@@ -65,7 +65,6 @@ public class ExecutionPlanDefinition {
                 unnamedQueryNo++;
             }
         }
-        //insert[\s]+into[\s]+([a-zA-Z]+).*
         Log.e("Query", queryDefinition+" "+queryName);
         queries.put(queryName, queryDefinition);
     }

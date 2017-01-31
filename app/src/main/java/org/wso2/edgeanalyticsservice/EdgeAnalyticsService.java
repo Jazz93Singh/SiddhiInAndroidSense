@@ -14,14 +14,13 @@ public class EdgeAnalyticsService extends Service {
     private CEP mCep;
     private TaskManager taskManager;
     private Map<String, ExecutionPlanDefinition> executionPlanDefinitionMap = new Hashtable<>();
-    IEdgeAnalyticsService edgeAnalyticsService = new IEdgeAnalyticsService.Stub() {
+    private final IEdgeAnalyticsService.Stub edgeAnalyticsService = new IEdgeAnalyticsService.Stub() {
 
         @Override
         public void addStream(String streamDefinition, String packageName) throws RemoteException {
             if (executionPlanDefinitionMap.get(packageName) == null) {
                 executionPlanDefinitionMap.put(packageName, new ExecutionPlanDefinition());
             }
-//            mCep.removeStream(executionPlanDefinitionMap.get(packageName).removeStream(Stream.parseStream(streamDefinition).streamName));
             mCep.addStream(Stream.parseStream(streamDefinition), packageName);
             executionPlanDefinitionMap.get(packageName).addStream(streamDefinition);
         }
@@ -87,23 +86,25 @@ public class EdgeAnalyticsService extends Service {
         }
 
         @Override
-        public void addQueryCallback(String queryName, String receiver, String packageName, String ownPackageName) throws RemoteException {
-            mCep.addQueryCallback(packageName, queryName, receiver, ownPackageName);
+        public void addQueryCallback(String queryName, /*String receiver,*/ String packageName,
+                                     String ownPackageName, IEdgeAnalyticsCallback callback) throws RemoteException {
+            mCep.addQueryCallback(packageName, queryName,/* receiver,*/ ownPackageName, callback);
+            //callback.callback("addQueryCallback");
         }
 
         @Override
-        public void addDynamicQueryCallback(String queryName, String packageName, String receiver) throws RemoteException {
-            mCep.addDynamicQueryCallback(packageName, queryName, receiver);
+        public void addDynamicQueryCallback(String queryName, String packageName/*, String receiver*/) throws RemoteException {
+            mCep.addDynamicQueryCallback(packageName, queryName/*, receiver*/);
         }
 
         @Override
-        public void addStreamCallback(String stream, String receiver, String packageName, String ownPackageName) throws RemoteException {
-            mCep.addStreamCallback(packageName, stream, receiver, ownPackageName);
+        public void addStreamCallback(String stream, /*String receiver,*/ String packageName, String ownPackageName, IEdgeAnalyticsCallback callback) throws RemoteException {
+            mCep.addStreamCallback(packageName, stream,/* receiver,*/ ownPackageName,callback);
         }
 
         @Override
-        public void addDynamicStreamCallback(String stream, String packageName, String reveiver) throws RemoteException {
-            mCep.addDynamicStreamCallback(packageName, stream, reveiver);
+        public void addDynamicStreamCallback(String stream, String packageName/*, String receiver*/) throws RemoteException {
+            mCep.addDynamicStreamCallback(packageName, stream/*, receiver*/);
         }
 
         @Override
@@ -139,16 +140,15 @@ public class EdgeAnalyticsService extends Service {
         }
     };
 
-    public EdgeAnalyticsService() {
-    }
+/*    public EdgeAnalyticsService() {
+    }*/
 
     @Override
     public IBinder onBind(Intent intent) {
         mCep = CEP.getInstance(getBaseContext());
         taskManager = TaskManager.getInstance(getBaseContext());
         executionPlanDefinitionMap.put(intent.getStringExtra("package"), new ExecutionPlanDefinition());
-//        executionPlanDefinition = new ExecutionPlanDefinition();
-        return edgeAnalyticsService.asBinder();
+        return edgeAnalyticsService;
     }
 
     @Override
@@ -167,5 +167,10 @@ public class EdgeAnalyticsService extends Service {
             e.printStackTrace();
         }
         return super.onUnbind(intent);
+    }
+
+     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
     }
 }
