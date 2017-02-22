@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/res/merged/debug/menu/menu_sense_settings.xml",
+        "source": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/src/main/res/menu/menu_sense_settings.xml"
+    },
+    {
+        "merged": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/res/merged/debug/menu/activity_activity_select_sensor_drawer.xml",
+        "source": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/src/main/res/menu/activity_activity_select_sensor_drawer.xml"
+    },
+    {
+        "merged": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/res/merged/debug/menu/activity_select_sensor.xml",
+        "source": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/src/main/res/menu/activity_select_sensor.xml"
+    }
+]

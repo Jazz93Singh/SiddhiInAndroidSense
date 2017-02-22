@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/res/merged/debug/raw/wso2carbon.cer",
+        "source": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/src/main/res/raw/wso2carbon.cer"
+    },
+    {
+        "merged": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/res/merged/debug/raw/client_truststore.bks",
+        "source": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/src/main/res/raw/client_truststore.bks"
+    }
+]

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="feign-jaxrs-8.16.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.netflix.feign/feign-jaxrs/8.16.0/26c8559913043700bf358b4167d72569b209d956/feign-jaxrs-8.16.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.netflix.feign/feign-jaxrs/8.16.0/b892417e26a197b9d115efb3da3cfe1311f0d866/feign-jaxrs-8.16.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
