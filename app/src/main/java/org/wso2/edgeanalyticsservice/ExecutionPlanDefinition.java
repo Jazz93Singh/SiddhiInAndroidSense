@@ -35,7 +35,7 @@ public class ExecutionPlanDefinition {
 
     //TODO figure out what to do to derived streams eg: Output Steam in queries
 
-    public void subscribeStreamToData(String streamDefinition, int[] inputTypes){
+    public void subscribeStreamToData(String streamDefinition/*, int [] inputTypes*/){
         String streamName = "";
         Pattern pattern = Pattern.compile("define[\\s]+stream[\\s]+(([a-z]|[A-Z])+).*");
         Matcher matcher = pattern.matcher(streamDefinition);
@@ -43,7 +43,7 @@ public class ExecutionPlanDefinition {
             streamName = matcher.group(1);
         }
 //        Log.e("Stream", streamDefinition+" "+streamName);
-        Stream s = new Stream(streamName, streamDefinition, inputTypes);
+        Stream s = new Stream(streamName, streamDefinition/*, inputTypes*/);
         streams.put(streamName, s);
     }
 

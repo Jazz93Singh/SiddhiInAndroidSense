@@ -28,19 +28,22 @@ public class EdgeAnalyticsService extends Service {
         @Override
         public void removeStream(String streamName, String packageName) throws RemoteException {
             try {
-                mCep.removeStream(executionPlanDefinitionMap.get(packageName).removeStream(streamName), packageName);
+                mCep.removeStream(executionPlanDefinitionMap.get(packageName)
+                        .removeStream(streamName), packageName);
             } catch (NullPointerException e) {
                 throw new RemoteException(packageName + " has not added any streams");
             }
         }
 
         @Override
-        public void subscribeStreamToData(String packageName, String streamDefinition, int[] inputTypes) throws RemoteException {
+        public void subscribeStreamToData(String packageName, String streamDefinition/*,
+                                          int[] inputTypes*/) throws RemoteException {
             if (executionPlanDefinitionMap.get(packageName) == null) {
                 executionPlanDefinitionMap.put(packageName, new ExecutionPlanDefinition());
             }
             mCep.addStream(Stream.parseStream(streamDefinition), packageName);
-            executionPlanDefinitionMap.get(packageName).subscribeStreamToData(streamDefinition, inputTypes);
+            executionPlanDefinitionMap.get(packageName).subscribeStreamToData(streamDefinition/*,
+                    inputTypes*/);
         }
 
         @Override
@@ -86,29 +89,34 @@ public class EdgeAnalyticsService extends Service {
         }
 
         @Override
-        public void addQueryCallback(String queryName, /*String receiver,*/ String packageName,
-                                     String ownPackageName, IEdgeAnalyticsCallback callback) throws RemoteException {
-            mCep.addQueryCallback(packageName, queryName,/* receiver,*/ ownPackageName, callback);
-            //callback.callback("addQueryCallback");
+        public void addQueryCallback(String queryName,  String packageName, String ownPackageName,
+                                     IEdgeAnalyticsCallback callback) throws RemoteException {
+            mCep.addQueryCallback(packageName, queryName, ownPackageName, callback);
         }
 
         @Override
-        public void addDynamicQueryCallback(String queryName, String packageName/*, String receiver*/) throws RemoteException {
-            mCep.addDynamicQueryCallback(packageName, queryName/*, receiver*/);
+        public void addDynamicQueryCallback(String queryName, String packageName,
+                                            String ownPackageName, IEdgeAnalyticsCallback callback)
+                throws RemoteException {
+            mCep.addDynamicQueryCallback(packageName, queryName,ownPackageName, callback);
         }
 
         @Override
-        public void addStreamCallback(String stream, /*String receiver,*/ String packageName, String ownPackageName, IEdgeAnalyticsCallback callback) throws RemoteException {
-            mCep.addStreamCallback(packageName, stream,/* receiver,*/ ownPackageName,callback);
+        public void addStreamCallback(String stream, String packageName, String ownPackageName,
+                                      IEdgeAnalyticsCallback callback) throws RemoteException {
+            mCep.addStreamCallback(packageName, stream, ownPackageName,callback);
         }
 
         @Override
-        public void addDynamicStreamCallback(String stream, String packageName/*, String receiver*/) throws RemoteException {
-            mCep.addDynamicStreamCallback(packageName, stream/*, receiver*/);
+        public void addDynamicStreamCallback(String stream, String packageName,
+                                             String ownPackageName, IEdgeAnalyticsCallback callback)
+                throws RemoteException {
+            mCep.addDynamicStreamCallback(packageName, stream, ownPackageName, callback);
         }
 
         @Override
-        public void sendData(String id, String stream, List<String> values, List<String> types) throws RemoteException {
+        public void sendData(String id, String stream, List<String> values, List<String> types)
+                throws RemoteException {
             Object[] x = new Object[values.size()];
 
             /** Identify the data types which the client sends. */
@@ -147,7 +155,8 @@ public class EdgeAnalyticsService extends Service {
     public IBinder onBind(Intent intent) {
         mCep = CEP.getInstance(getBaseContext());
         taskManager = TaskManager.getInstance(getBaseContext());
-        executionPlanDefinitionMap.put(intent.getStringExtra("package"), new ExecutionPlanDefinition());
+        executionPlanDefinitionMap.put(intent.getStringExtra("package"),
+                new ExecutionPlanDefinition());
         return edgeAnalyticsService;
     }
 

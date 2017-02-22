@@ -1,7 +1,6 @@
 package org.wso2.edgeanalyticsservice;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -40,14 +39,13 @@ public class CEP {
     private static CEP instance;
     private static SiddhiManager mSiddhiManager;
 
-    private String TAG = "CEP-######";
+    private String TAG = "CEP";
     /**
      * Maps to store the packages which use the execution plans
      */
     private Map<String, ExecutionPlanRuntime> packageVsExecutionPlan = new Hashtable<>();
     private Map<ExecutionPlanRuntime, Collection<Stream>> executionPlanRuntimes = new Hashtable<>();
     private Map<ExecutionPlanRuntime, Collection<Stream>> subscribedExecutionPlanRuntimes = new Hashtable<>();
-    //    private List<Stream> allStreams = new ArrayList<>();
     private Map<String, Map<String, Stream>> packageVsStreams = new Hashtable<>();
     private Map<String, Set<Integer>> packageVsInputTypes = new Hashtable<>();
     private Map<String, List<Callback>> packageVsCallback = new Hashtable<>();
@@ -65,7 +63,7 @@ public class CEP {
     }
 
     /**
-     * Send data to all respective execution plan runtimes
+     * Send data to all respective executionPlanRuntimes
      */
     private void sendToStreams() {
         for (ExecutionPlanRuntime e : subscribedExecutionPlanRuntimes.keySet()) {
@@ -187,13 +185,13 @@ public class CEP {
                         addStreamCallback(source, target, receiverPkg, callback);
                         break;
                     case Callback.STREAM_DYNAMIC:
-                        addDynamicStreamCallback(source, target);
+                        addDynamicStreamCallback(source, target, receiverPkg, callback);
                         break;
                     case Callback.QUERY_STATIC:
                         addQueryCallback(source, target, receiverPkg, callback);
                         break;
                     case Callback.QUERY_DYNAMIC:
-                        addDynamicQueryCallback(source, target);
+                        addDynamicQueryCallback(source, target, receiverPkg, callback);
                         break;
                 }
             }
@@ -284,87 +282,67 @@ public class CEP {
        if (packageVsCallback.get(id) == null) {
             packageVsCallback.put(id, new ArrayList<Callback>());
         }
-        try {
-            edgeAnalyticsCallback.callback("addStreamCallback");
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
         packageVsCallback.get(id).add(new Callback(Callback.STREAM_STATIC, id, stream, receiverPkg,
                 edgeAnalyticsCallback));
         ExecutionPlanRuntime executionPlanRuntime = packageVsExecutionPlan.get(id);
-        Log.i(TAG,"0000000000000: ExecutionPlan name:"+ executionPlanRuntime.getName());
         executionPlanRuntime.addCallback(stream, new StreamCallback() {
             @Override
             public void receive(Event[] events) {
-                Log.i(TAG,"########################\n");
+                try {
+                    edgeAnalyticsCallback.callback(Arrays.toString(events));
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         });
-        Log.i(TAG,"E111111111111: ExecutionPlan name:"+ executionPlanRuntime.getName());
     }
-
-    /*
-    *     public void addStreamCallback(final String id, String stream, final String receiver, final String receiverPkg) {
-        if (packageVsCallback.get(id) == null) {
-            packageVsCallback.put(id, new ArrayList<Callback>());
-        }
-        packageVsCallback.get(id).add(new Callback(Callback.STREAM_STATIC, id, stream, receiver, receiverPkg));
-        ExecutionPlanRuntime executionPlanRuntime = packageVsExecutionPlan.get(id);
-        executionPlanRuntime.addCallback(stream, new StreamCallback() {
-            @Override
-            public void receive(Event[] events) {
-                Intent intent = new Intent(receiver);
-                intent.setPackage(receiverPkg);
-                intent.putExtra("event", Arrays.deepToString(events));
-                context.sendBroadcast(intent);
-            }
-        });
-}*/
 
     /**
      * Add dynamic callback to a stream
      */
-    public void addDynamicStreamCallback(final String source, final String stream) {
+    public void addDynamicStreamCallback(final String source, final String stream,
+                                         final String receiverPkg,
+                                         final IEdgeAnalyticsCallback edgeAnalyticsCallback) {
         if (packageVsCallback.get(source) == null) {
             packageVsCallback.put(source, new ArrayList<Callback>());
         }
-        /*
-        packageVsCallback.get(source).add(new Callback(Callback.STREAM_DYNAMIC, source, stream, receiver, null));
+        packageVsCallback.get(source).add(new Callback(Callback.STREAM_DYNAMIC, source, stream,
+                receiverPkg,edgeAnalyticsCallback));
         ExecutionPlanRuntime executionPlanRuntime = packageVsExecutionPlan.get(source);
         executionPlanRuntime.addCallback(stream, new StreamCallback() {
             @Override
             public void receive(Event[] events) {
-                Intent intent = new Intent(stream);
-                intent.setPackage(receiver);
-                intent.putExtra("event", Arrays.deepToString(events));
-                context.sendBroadcast(intent);
+                try {
+                    edgeAnalyticsCallback.callback(Arrays.toString(events));
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
-        });*/
+        });
     }
 
     /**
      * Add callback to a query
      */
     public void addQueryCallback(final String id, String queryName,
-                                 final String receiverPkg, final IEdgeAnalyticsCallback callback) {
+                                 final String receiverPkg,
+                                 final IEdgeAnalyticsCallback edgeAnalyticsCallback) {
         if (packageVsCallback.get(id) == null) {
             packageVsCallback.put(id, new ArrayList<Callback>());
         }
-        packageVsCallback.get(id).add(new Callback(Callback.QUERY_STATIC, id, queryName, receiverPkg, callback));
+        packageVsCallback.get(id).add(new Callback(Callback.QUERY_STATIC, id, queryName,
+                receiverPkg, edgeAnalyticsCallback));
         ExecutionPlanRuntime executionPlanRuntime = packageVsExecutionPlan.get(id);
         //Log.d(TAG, "Source: " + id + ", Receiver: " + receiver + ", Query Name: " + queryName);
         executionPlanRuntime.addCallback(queryName, new QueryCallback() {
             @Override
             public void receive(long l, Event[] events, Event[] events1) {
-                /*Intent intent = new Intent(receiver);
-                intent.setPackage(receiverPkg);*/
                 StringBuilder sb = new StringBuilder();
                 sb.append("Events{ @timeStamp = ").append(l).append(", inEvents = ")
                         .append(Arrays.deepToString(events)).append(", RemoveEvents = ")
                         .append(Arrays.deepToString(events1)).append(" }");
-                /*intent.putExtra("event", sb.toString());
-                context.sendBroadcast(intent);*/
                 try {
-                    callback.callback("addQueryCallback");
+                    edgeAnalyticsCallback.callback(sb.toString());
                 } catch (RemoteException e) {
                     Log.e(TAG, e.getMessage());
                 }
@@ -376,25 +354,30 @@ public class CEP {
     /**
      * Add dynamic callback to a query
      */
-    public void addDynamicQueryCallback(final String source, final String queryName) {
+    public void addDynamicQueryCallback(final String source, final String queryName,
+                                        final String receiverPkg,
+                                        final IEdgeAnalyticsCallback edgeAnalyticsCallback) {
         if (packageVsCallback.get(source) == null) {
             packageVsCallback.put(source, new ArrayList<Callback>());
-        }/*
-        packageVsCallback.get(source).add(new Callback(Callback.QUERY_DYNAMIC, source, queryName, receiver, null));
+        }
+        packageVsCallback.get(source).add(new Callback(Callback.QUERY_DYNAMIC, source, queryName,
+                receiverPkg,edgeAnalyticsCallback));
         ExecutionPlanRuntime executionPlanRuntime = packageVsExecutionPlan.get(source);
-        Log.d(TAG, "Source: " + source + ", Receiver: " + receiver + ", Query Name: " + queryName);
         executionPlanRuntime.addCallback(queryName, new QueryCallback() {
             @Override
             public void receive(long l, Event[] events, Event[] events1) {
-                Intent intent = new Intent(queryName);
-                intent.setPackage(receiver);
                 StringBuilder sb = new StringBuilder();
-                sb.append("Events{ @timeStamp = ").append(l).append(", inEvents = ").append(Arrays.deepToString(events)).append(", RemoveEvents = ").append(Arrays.deepToString(events1)).append(" }");
-                intent.putExtra("event", sb.toString());
-                context.sendBroadcast(intent);
+                sb.append("Events{ @timeStamp = ").append(l).append(", inEvents = ")
+                        .append(Arrays.deepToString(events)).append(", RemoveEvents = ")
+                        .append(Arrays.deepToString(events1)).append(" }");
+                try {
+                    edgeAnalyticsCallback.callback(sb.toString());
+                } catch (RemoteException e) {
+                    Log.e(TAG, e.getMessage());
+                }
                 Log.d(TAG, sb.toString());
             }
-        });*/
+        });
     }
 
     /**

@@ -27,14 +27,16 @@ interface IEdgeAnalyticsService {
     List<Stream> getAllStreams();
     void validateExecutionPlan(String packageName);
     void startExecutionPlan(String packageName);
-    oneway void addQueryCallback(String queryName, /*String receiver,*/ String packageName,
+    oneway void addQueryCallback(String queryName, String packageName,
     String ownPackageName, IEdgeAnalyticsCallback callback);
-    oneway void addDynamicQueryCallback(String queryName, String packageName/*, String receiver*/);
-    oneway void addStreamCallback(String stream, /*String receiver,*/ String packageName,
+    oneway void addDynamicQueryCallback(String queryName, String packageName,
     String ownPackageName, IEdgeAnalyticsCallback callback);
-    oneway void addDynamicStreamCallback(String stream, String packageName/*, String receiver*/);
+    oneway void addStreamCallback(String stream, String packageName,
+    String ownPackageName, IEdgeAnalyticsCallback callback);
+    oneway void addDynamicStreamCallback(String stream, String packageName,
+    String ownPackageName, IEdgeAnalyticsCallback callback);
     void sendData(String id, String stream, in List<String> values,in List<String> types);
-    void subscribeStreamToData(String packageName, String streamDefinition, in int [] inputTypes);
+    void subscribeStreamToData(String packageName, String streamDefinition/*, in int [] inputTypes*/);
     void subscribeExecutionPlan(String packageName);
     void stop();
 }

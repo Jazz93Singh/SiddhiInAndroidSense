@@ -18,7 +18,6 @@ public class Callback {
         this.type = type;
         this.source = source;
         this.target = target;
-        //this.receiver = receiver;
         this.receiverPkg = receiverPkg;
         this.callback = callback;
     }

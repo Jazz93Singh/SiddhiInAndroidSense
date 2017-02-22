@@ -88,7 +88,7 @@ public class LightIntensitySensorService implements SensorEventListener {
     }
 
     /**
-     * Stop the sensor by calling unregister Listner
+     * Stop the sensor by calling unregister Listener
      */
     void stopLightIntensitySensorService()
     {
