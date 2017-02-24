@@ -36,6 +36,7 @@ public class SiddhiActivity extends AppCompatActivity {
     private static final String TAG = SiddhiActivity.class.getName();
     private static List<String> values = new Stack<>();
     private static List<String> types = new Stack<>();
+    private static final String packagename =  "org.wso2.edgeanalyticsservice";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +46,9 @@ public class SiddhiActivity extends AppCompatActivity {
         types.add("float");
         Intent intentIEdgeAnalyticsService = new Intent()
                 .setComponent(new ComponentName
-                        ("org.wso2.edgeanalyticsservice",
+                        (packagename,
                                 "org.wso2.edgeanalyticsservice.EdgeAnalyticsService"));
-        intentIEdgeAnalyticsService.putExtra("package", "org.wso2.edgeanalyticsservice");
+        intentIEdgeAnalyticsService.putExtra("package",packagename);
         startService(intentIEdgeAnalyticsService);
         bindService(intentIEdgeAnalyticsService, mConnection, BIND_AUTO_CREATE);
     }
@@ -62,8 +63,7 @@ public class SiddhiActivity extends AppCompatActivity {
             mCallback = new IEdgeAnalyticsCallback.Stub() {
                 @Override
                 public void callback(String event) throws RemoteException {
-                    Log.i(TAG, "################" + event + "\n");
-                    handleMessage("Your Phone dropped!!!");
+                    handleMessage(event);
                 }
             };
             SensorDataReader.setStarted(true);
@@ -76,8 +76,10 @@ public class SiddhiActivity extends AppCompatActivity {
         }
     };
 
-    private void handleMessage(String msg){
-        final String message = msg;
+    private void handleMessage(String event){
+        Log.i(TAG,event);
+        Log.i(TAG,"Your phone dropped");
+        final String message = "Your phone dropped...";
         Thread t = new Thread(){
             public void run() {
                 Message myMessage = new Message();
@@ -97,127 +99,74 @@ public class SiddhiActivity extends AppCompatActivity {
         }
     };
 
-
-    public static void addExecutionPlan() {
-        /*for (Sensor s : ActivitySelectSensor.sensors) {*/
-            try {/*
-                mIEdgeAnalyticsService.addStream("" +
-                            "define stream newStream (data float); ",
-                    "org.wso2.edgeanalyticsservice");
-                mIEdgeAnalyticsService.addQuery("" +
-                                "@info(name = 'query1') " +
-                                "from newStream[data <= 100.0] " +
-                                "select data " +
-                                "insert into outputStream; ",
-                        "org.wso2.edgeanalyticsservice");*/
-                mIEdgeAnalyticsService.addStream("" +
-                                "define stream accelerometerStream (data float); ",
-                        "org.wso2.edgeanalyticsservice");
-                mIEdgeAnalyticsService.addQuery("" +
-                                "@info(name = 'query2') " +
-                                "from accelerometerStream#window.timeBatch(1500)" +
-                                "select avg(data) as avgData " +
-                                "insert into avgStream; ",
-                        "org.wso2.edgeanalyticsservice");
-                mIEdgeAnalyticsService.addQuery("" +
-                                "@info(name = 'query3') " +
-                                "from avgStream[avgData < 2]" +
-                                "select avgData " +
-                                "insert into newStream; ",
-                        "org.wso2.edgeanalyticsservice");
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-       /* }*/
-        try {
-            mIEdgeAnalyticsService.startExecutionPlan("org.wso2.edgeanalyticsservice");/*
-            mIEdgeAnalyticsService.addStreamCallback("outputStream",
-                    "org.wso2.edgeanalyticsservice", "org.wso2.edgeanalyticsservice", mCallback);*/
-            mIEdgeAnalyticsService.addStreamCallback("newStream",
-                    "org.wso2.edgeanalyticsservice", "org.wso2.edgeanalyticsservice", mCallback);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unbindService(mConnection);
     }
-
-/*
-    public static void Communicate(SensorEvent event) {
-
+    public static void setExecutionPlan(String streamDefinition, String queryDefinition, String callbackStream){
         try {
-            mIEdgeAnalyticsService.subscribeStreamToData("org.wso2.edgeanalyticsservice",
-                    "define stream newStream (data double); ");
-            mIEdgeAnalyticsService.addStreamCallback("newStream",
-                    "org.wso2.edgeanalyticsservice", "org.wso2.edgeanalyticsservice", mCallback);
-            Log.i(TAG, "Starting Communication\n");
-            mIEdgeAnalyticsService.addStream("" +
-                            "define stream tempStream (HUMIDITY int); ",
-                    "org.wso2.edgeanalyticsservice");
-            mIEdgeAnalyticsService.addQuery("" +
-                            "@info(name = 'query1') " +
-                            "from tempStream[HUMIDITY <= 100] " +
-                            "select HUMIDITY " +
-                            "insert into outputStream; ",
-                    "org.wso2.edgeanalyticsservice");
-            Log.i(TAG, "addQuery query1\n");
-            mIEdgeAnalyticsService.startExecutionPlan("org.wso2.edgeanalyticsservice");
-            Log.i(TAG, "startExecutionPlan\n");
-            Log.i(TAG, "subscribeExecutionPlan: to start collecting data from sensors...\n");
-            List<Stream> a = mIEdgeAnalyticsService.getAllStreams();
-            for (Stream o : a) {
-                Log.i(TAG, "Stream :" + o.streamName + "\n");
-                Log.i(TAG, "Stream describeContents:" + Arrays.toString(o.inputTypes) + "\n");
-                Log.i(TAG, "Stream streamDefinition:" + o.streamDefinition + "\n");
-            }
-            mIEdgeAnalyticsService.addStreamCallback("outputStream",
-                    "org.wso2.edgeanalyticsservice", "org.wso2.edgeanalyticsservice", mCallback);
-            mIEdgeAnalyticsService.subscribeExecutionPlan("org.wso2.edgeanalyticsservice");
-            values.add("100");
-            types.add("int");
-            mIEdgeAnalyticsService.sendData("org.wso2.edgeanalyticsservice", "tempStream", values, types);
-            values.remove("100");
-            types.remove("int");
-            values.add("10");
-            types.add("int");
-            mIEdgeAnalyticsService.sendData("org.wso2.edgeanalyticsservice", "tempStream", values, types);
-            values.remove("10");
-            types.remove("int");
-            values.add("34");
-            types.add("int");
-            mIEdgeAnalyticsService.sendData("org.wso2.edgeanalyticsservice", "tempStream", values, types);
-            values.remove("34");
-            types.remove("int");
-            values.add("50");
-            types.add("int");
-            mIEdgeAnalyticsService.sendData("org.wso2.edgeanalyticsservice", "tempStream", values, types);
+            mIEdgeAnalyticsService.addStream(streamDefinition, packagename);
+            mIEdgeAnalyticsService.addQuery(queryDefinition, packagename);
+            mIEdgeAnalyticsService.startExecutionPlan(packagename);
+            mIEdgeAnalyticsService.addStreamCallback(callbackStream, packagename, packagename, mCallback);
         } catch (RemoteException e) {
             e.printStackTrace();
-
         }
-    }*/
-
+    }
+    public static void addQuerytoExistingStream(String queryDefinition){
+        try {
+            mIEdgeAnalyticsService.addQuery(queryDefinition,packagename);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void removeExecutionPlan(String streamDefinition, String queryDefinition){
+        try {
+            mIEdgeAnalyticsService.removeStream(streamDefinition,packagename);
+            mIEdgeAnalyticsService.removeQuery(queryDefinition,packagename);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void removeQuery(String queryDefinition){
+        try {
+            mIEdgeAnalyticsService.removeQuery(queryDefinition,packagename);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
     public static void getData(SensorEvent event){
         //todo: there are several other sensors. implement for them.
         switch(event.sensor.getType()){
             case TYPE_ACCELEROMETER:
                 if(isServiceConnected) {
+                    setExecutionPlan("" +
+                                    "define stream accelerometerStream (data float); ",
+                                    "from accelerometerStream#window.timeBatch(1500)" +
+                                    "select avg(data) as avgData " +
+                                    "insert into avgStream; ",
+                            packagename);
+                    addQuerytoExistingStream("" +
+                            "from avgStream[avgData < 2]" +
+                            "select avgData " +
+                            "insert into newStream; ");
                     try {
+                        mIEdgeAnalyticsService.startExecutionPlan(packagename);
+                        mIEdgeAnalyticsService.addStreamCallback("" +
+                                "newStream", packagename,
+                                packagename, mCallback);
                         values.add(String.valueOf(event.values[0]));
-                        mIEdgeAnalyticsService.sendData("org.wso2.edgeanalyticsservice",
-                                "accelerometerStream", values, types);
+                        mIEdgeAnalyticsService.sendData(packagename, "accelerometerStream",
+                                values, types);
                         values.remove(String.valueOf(event.values[0]));
                         values.add(String.valueOf(event.values[1]));
-                        mIEdgeAnalyticsService.sendData("org.wso2.edgeanalyticsservice",
-                                "accelerometerStream", values, types);
+                        mIEdgeAnalyticsService.sendData(packagename, "accelerometerStream",
+                                values, types);
                         values.remove(String.valueOf(event.values[1]));
                         values.add(String.valueOf(event.values[2]));
-                        mIEdgeAnalyticsService.sendData("org.wso2.edgeanalyticsservice",
-                                "accelerometerStream", values, types);
+                        mIEdgeAnalyticsService.sendData(packagename, "accelerometerStream",
+                                values, types);
                         values.remove(String.valueOf(event.values[2]));
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -250,8 +199,7 @@ public class SiddhiActivity extends AppCompatActivity {
             try {
                 for(int i=0;i<event.values.length;i++){
                     values.add(String.valueOf(event.values[i]));
-                    mIEdgeAnalyticsService.sendData("org.wso2.edgeanalyticsservice",
-                            "newStream", values, types);
+                    mIEdgeAnalyticsService.sendData(packagename, "newStream", values, types);
                     values.remove(String.valueOf(event.values[i]));
                 }
             } catch (RemoteException e) {

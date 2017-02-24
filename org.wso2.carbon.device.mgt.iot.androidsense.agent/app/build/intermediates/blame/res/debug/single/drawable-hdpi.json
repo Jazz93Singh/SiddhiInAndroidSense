@@ -112,12 +112,12 @@
         "source": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/res/drawable-hdpi/abc_btn_check_to_on_mtrl_000.png"
     },
     {
-        "merged": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/res/merged/debug/drawable-hdpi/abc_list_pressed_holo_light.9.png",
-        "source": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/res/drawable-hdpi/abc_list_pressed_holo_light.9.png"
-    },
-    {
         "merged": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/res/merged/debug/drawable-hdpi/abc_ab_share_pack_mtrl_alpha.9.png",
         "source": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/res/drawable-hdpi/abc_ab_share_pack_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/res/merged/debug/drawable-hdpi/abc_list_pressed_holo_light.9.png",
+        "source": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/res/drawable-hdpi/abc_list_pressed_holo_light.9.png"
     },
     {
         "merged": "/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/res/merged/debug/drawable-hdpi/abc_ic_menu_copy_mtrl_am_alpha.png",

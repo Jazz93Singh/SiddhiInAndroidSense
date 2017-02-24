@@ -1,4 +1,0 @@
-#Mon Feb 20 12:13:31 IST 2017
-base.0=/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main
-renamed.0=classes.dex
-file.0=/home/vimukthi/Desktop/carbon device mgt plugins/components/device-types/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.agent/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes.dex
